@@ -34,8 +34,10 @@ app.get('/', function(req, res){
 /*
  *  main server sequence
  **/
-var server = app.listen(8080,function(){
-    console.log("We have started our server on port ...");
+var port = process.env.PORT || 3000;
+var host = process.env.HOST || '0.0.0.0';
+var server = app.listen(port,function(){
+    console.log("We have started our server on port "+port);
     if (app.get('env') === 'development') {
         app.locals.pretty = true;
     }
