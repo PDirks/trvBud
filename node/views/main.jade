@@ -1,0 +1,38 @@
+doctype html
+html(lang='en', ng-app="trvBudApp")
+    head
+        title= title
+        link(rel='stylesheet', href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css')
+        link(rel='stylesheet', href='/css/main.css')
+        script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js')
+        script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/angularjs/1.0.4/angular.js')
+        script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
+        script(async, defer, type='text/javascript', src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBB42U5SAheKpOjRBAG-yxjp7XBghX2gyM&callback=initMap')
+        script(type='text/javascript', src='/js/main.js')
+        script(type='text/javascript', src='/js/main-controller.js')
+    body(ng-controller="trvBudCtrl")
+        nav.navbar.navbar-inverse
+            div.container-fluid
+                a.navbar-brand(href='#') trvBud
+    
+        block content
+            h1= title
+            h3 This is a test!
+        div.container.col-md-4
+            form#addForm(ng-submit="addPlace()")
+                div.input-group
+                    input.form-control(type="text", placeholder="Where next?" ng-model="newAdd")
+                    span.input-group-btn
+                        button.btn.btn-default(type="submit", value="Submit") Go!
+      
+            li.table.table-striped(ng-repeat="p in places")
+                div#names
+                    b {{p.name}}
+                    
+            p.
+                Swag small batch echo park, paleo tofu PBR&B beard YOLO hoodie kale chips schlitz sartorial food truck heirloom before they sold out. Farm-to-table crucifix bicycle rights ugh, hammock lomo scenester tofu. Tacos readymade hella art party. Tumblr chicharrones trust fund hammock disrupt normcore. Meditation pug marfa 8-bit cold-pressed. Migas vinyl meggings organic butcher whatever, selvage pinterest. Food truck flannel hoodie butcher.
+        
+        div.container.col-md-8
+            p.
+                map:
+            div#googleMap
