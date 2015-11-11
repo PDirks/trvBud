@@ -108,7 +108,7 @@ var styles = [
 function initMap() {
     var styledMap = new google.maps.StyledMapType(styles, {name: "Styled Map"});
 
-    
+
     map = new google.maps.Map(document.getElementById('googleMap'), {
         center: {lat: 40, lng: -90},
         zoom: 5
@@ -118,3 +118,34 @@ function initMap() {
     map.setMapTypeId('map_style');
 
 }
+
+var tags = []
+
+function getCities( q ) {
+    $.ajax({
+        url: '/getCity',
+        data: q,
+        type: 'get',
+        dataType: 'json',
+        success: function(data){
+            console.log(JSON.stringify(data));
+            console.log(data[0].name);
+            tags = data;
+            data.forEach(function(d){
+               tags.push(d.name);
+            });
+            $('#placeSearch').autocomplete({
+               source: tags
+            });
+        }
+    });
+}
+
+$(document).ready(function(){
+    $('#placeSearch').keyup(function(){
+        var q = $('#placeSearch').val();
+        console.log("key up: "+q);
+        getCities(q)
+    });
+    
+});

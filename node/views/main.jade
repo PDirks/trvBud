@@ -4,9 +4,11 @@ html(lang='en', ng-app="trvBudApp")
         title= title
         link(rel='stylesheet', href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css')
         link(rel='stylesheet', href='/css/main.css')
+        link(rel='stylesheet', href='https://code.jquery.com/ui/1.11.4/themes/black-tie/jquery-ui.css')
         script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js')
         script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/angularjs/1.0.4/angular.js')
         script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
+        script(type='text/javascript', src='https://code.jquery.com/ui/1.11.4/jquery-ui.min.js')
         script(async, defer, type='text/javascript', src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBB42U5SAheKpOjRBAG-yxjp7XBghX2gyM&callback=initMap')
         script(type='text/javascript', src='/js/main.js')
         script(type='text/javascript', src='/js/main-controller.js')
@@ -21,7 +23,7 @@ html(lang='en', ng-app="trvBudApp")
         div.container.col-md-4
             form#addForm(ng-submit="addPlace()")
                 div.input-group
-                    input.form-control(type="text", placeholder="Where next?" ng-model="newAdd")
+                    input#placeSearch.form-control(type="text", placeholder="Where next?", ng-model="newAdd", ng-keypress="console.log('qwe')")
                     span.input-group-btn
                         button.btn.btn-default(type="submit", value="Submit") Go!
       
