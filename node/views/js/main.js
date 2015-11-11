@@ -124,7 +124,7 @@ var tags = []
 function getCities( q ) {
     $.ajax({
         url: '/getCity',
-        data: q,
+        data: {"q":q},
         type: 'get',
         dataType: 'json',
         success: function(data){

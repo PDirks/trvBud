@@ -23,12 +23,34 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) {
     console.log("connected to mongo")
 });
+var findCity = function(db, query, callback){
+    var cursor = db.collection('city').find({AccentCity: query}).sort({Population:-1}).limit(5);
+    cursor.each(function(err, doc){
+        assert.equal(err, null);
+        if( doc != null ){
+            
+            console.dir(doc);
+            
+        }
+    });
+}
+
 
 /*
  *  routing
  **/
+app.get('/getCity', function(req, res){
+    var query = req.body.q;
+    console.log("looking up: "+query);
+    //res.json([{name: 'Chicago'}]);
+    findCity(db, query, function(city_arr){
+         res.json(city_ar);
+    });
+});
+
 app.get('/', function(req, res){ 
     res.render('main.jade');
+    console.log("[get]");
 });
 
 /*
