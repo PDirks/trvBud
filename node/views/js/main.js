@@ -141,11 +141,30 @@ function getCities( q ) {
     });
 }
 
+var citySearch = new Bloodhound({
+    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    remote: {
+        url: '/getCity?q=%QUERY',
+        wildcard: '%QUERY'
+    }
+    
+})
+
 $(document).ready(function(){
+    /*
     $('#placeSearch').keyup(function(){
         var q = $('#placeSearch').val();
         console.log("key up: "+q);
         getCities(q)
     });
-    
+    */
+    var q = $('#placeSearch').val();
+    $('#placeSearch').typeahead(null,{
+        name: "city-search",
+        display: "value",
+        source: citySearch
+        //remote: '/getCity?q='+q,
+        //minLength: 3
+    });
 });

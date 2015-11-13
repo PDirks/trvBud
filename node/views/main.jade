@@ -10,6 +10,7 @@ html(lang='en', ng-app="trvBudApp")
         script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
         script(type='text/javascript', src='https://code.jquery.com/ui/1.11.4/jquery-ui.min.js')
         script(async, defer, type='text/javascript', src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBB42U5SAheKpOjRBAG-yxjp7XBghX2gyM&callback=initMap')
+        script(type='text/javascript', src='/js/typeahead.bundle.js')
         script(type='text/javascript', src='/js/main.js')
         script(type='text/javascript', src='/js/main-controller.js')
         
@@ -20,7 +21,7 @@ html(lang='en', ng-app="trvBudApp")
         div.container.col-md-4
             form#addForm(ng-submit="addPlace()")
                 div.input-group
-                    input#placeSearch.form-control(type="text", placeholder="Where next?", ng-model="newAdd", ng-keypress="console.log('qwe')")
+                    input#placeSearch.form-control.typeahead(type="text", placeholder="Where next?", ng-model="newAdd")
                     span.input-group-btn
                         button.btn.btn-default(type="submit", value="Submit") Go!
       

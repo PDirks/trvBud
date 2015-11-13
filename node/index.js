@@ -26,11 +26,11 @@ db.once('open', function (callback) {
 var findCity = function(db, query, callback){
     var cursor = db.collection('city').find({AccentCity: query}).sort({Population:-1}).limit(5);
     cursor.each(function(err, doc){
-        assert.equal(err, null);
+        if(err != null){
+            console.dir("there was a get error");
+        }
         if( doc != null ){
-            
-            console.dir(doc);
-            
+            callback(doc);
         }
     });
 }
@@ -39,12 +39,34 @@ var findCity = function(db, query, callback){
 /*
  *  routing
  **/
-app.get('/getCity', function(req, res){
-    var query = req.body.q;
+app.get('/getCity', function(req, res, next){
+    var query = req.query.q;
     console.log("looking up: "+query);
     //res.json([{name: 'Chicago'}]);
-    findCity(db, query, function(city_arr){
-         res.json(city_ar);
+    var cursor = db.collection('city').find({AccentCity: query}).sort({Population:-1}).limit(5);
+    cursor.each(function(err, doc){
+        if(err != null){
+            console.dir("there was a get error");
+            return;
+        }
+        if( doc != null ){
+            //console.log(doc);
+            return res.json(doc);
+            
+            /*
+             * Magic that keeps the headers from crashing errything...
+             **/
+            /*
+            var sent = false;
+            res.json = function(doc){
+                if(sent) return;
+                console.log("sending...");
+                _send.bind(res)(doc);
+                sent = true;
+            };
+            next();
+            */
+        }
     });
 });
 
