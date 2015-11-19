@@ -24,16 +24,22 @@ html(lang='en', ng-app="trvBudApp")
                 div.input-group    
                     input#date.form-control(type="date", placeholder="Date", ng-model="newDate", date-type="string", date-data-format="mm/dd/yyyy")
                     span.input-group-btn
-                        button.btn.btn-default(type="submit", value="Submit") Go!
-                
-      
+                        button.btn.btn-default(type="submit", value="Submit") Go!  
+            span
+                a#help_toggle(data-toggle="collapse", data-target="#help") 
+                        i help
+            div#help.collapse    
+                p
+                    Search results return the city with the highest population. Use proper capitalization when searching (ie. "Chicago", not "chicago").
+                p
+                    For more exact searches, include the two-letter region and city codes (separated by commas)
+                p
+                    For example, to search Bloomington, IL enter "Bloomington,IL,us"
             li.table.table-striped(ng-repeat="p in places")
                 div#names
-                    b 
-                        {{p.name}}
+                    b {{p.name}}
                     span
-                        i
-                            {{p.arrive}}
+                        i {{p.arrive}}
                     span.names-icons
                         span.glyphicon.glyphicon-remove(ng-click="rmPlace(p)")
                         span.glyphicon.glyphicon-menu-down(ng-click="moveDown(p)")
