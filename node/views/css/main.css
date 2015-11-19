@@ -1,4 +1,25 @@
 #googleMap {
     width: 700px;
-    height: 800px;
+    height: 600px;
+    float: right;
+}
+
+.names-icons {
+    float: right;
+}
+
+.glyphicon {
+    cursor: pointer;
+}
+
+.table {
+    padding-top: 5px;
+}
+
+.save_button {
+    margin: 10px;
+}
+
+i {
+    text-indent: 10px
 }

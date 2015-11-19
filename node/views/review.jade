@@ -1,0 +1,25 @@
+doctype html
+html(lang='en', ng-app="trvBudApp")
+    head
+        title= title
+        link(rel='stylesheet', href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css')
+        link(rel='stylesheet', href='/css/review.css')
+        link(rel='stylesheet', href='/css/jquery-ui.css')
+        script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js')
+        script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/angularjs/1.0.4/angular.js')
+        script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
+        script(type='text/javascript', src='/js/jquery-ui.js')
+        script(async, defer, type='text/javascript', src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBB42U5SAheKpOjRBAG-yxjp7XBghX2gyM&callback=initMap')
+        script(type='text/javascript', src='/js/typeahead.bundle.js')
+        script(type='text/javascript', src='/js/review.js')
+        script(type='text/javascript', src='/js/review-controller.js')
+        
+    body(ng-controller="trvBudCtrl")
+        nav.navbar.navbar-inverse
+            div.container-fluid
+                a.navbar-brand(href='#') trvBud
+        div.container.col-md-4
+            li.table.table-striped(ng-repeat="p in places")
+                    
+        div.container.col-md-8
+            div#googleMap

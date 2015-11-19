@@ -4,11 +4,11 @@ html(lang='en', ng-app="trvBudApp")
         title= title
         link(rel='stylesheet', href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css')
         link(rel='stylesheet', href='/css/main.css')
-        link(rel='stylesheet', href='https://code.jquery.com/ui/1.11.4/themes/black-tie/jquery-ui.css')
+        link(rel='stylesheet', href='/css/jquery-ui.css')
         script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js')
         script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/angularjs/1.0.4/angular.js')
         script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
-        script(type='text/javascript', src='https://code.jquery.com/ui/1.11.4/jquery-ui.min.js')
+        script(type='text/javascript', src='/js/jquery-ui.js')
         script(async, defer, type='text/javascript', src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBB42U5SAheKpOjRBAG-yxjp7XBghX2gyM&callback=initMap')
         script(type='text/javascript', src='/js/typeahead.bundle.js')
         script(type='text/javascript', src='/js/main.js')
@@ -20,17 +20,25 @@ html(lang='en', ng-app="trvBudApp")
                 a.navbar-brand(href='#') trvBud
         div.container.col-md-4
             form#addForm(ng-submit="addPlace()")
-                div.input-group
-                    input#placeSearch.form-control.typeahead(type="text", placeholder="Where next?", ng-model="newAdd")
+                input#placeSearch.form-control(type="text", placeholder="Where next?", ng-model="newAdd")                    
+                div.input-group    
+                    input#date.form-control(type="date", placeholder="Date", ng-model="newDate", date-type="string", date-data-format="mm/dd/yyyy")
                     span.input-group-btn
                         button.btn.btn-default(type="submit", value="Submit") Go!
+                
       
             li.table.table-striped(ng-repeat="p in places")
                 div#names
-                    b {{p.name}}
+                    b 
+                        {{p.name}}
+                    span
+                        i
+                            {{p.arrive}}
+                    span.names-icons
+                        span.glyphicon.glyphicon-remove(ng-click="rmPlace(p)")
+                        span.glyphicon.glyphicon-menu-down(ng-click="moveDown(p)")
+                        span.glyphicon.glyphicon-menu-up(ng-click="moveUp(p)")
                     
-            p.
-                Swag small batch echo park, paleo tofu PBR&B beard YOLO hoodie kale chips schlitz sartorial food truck heirloom before they sold out. Farm-to-table crucifix bicycle rights ugh, hammock lomo scenester tofu. Tacos readymade hella art party. Tumblr chicharrones trust fund hammock disrupt normcore. Meditation pug marfa 8-bit cold-pressed. Migas vinyl meggings organic butcher whatever, selvage pinterest. Food truck flannel hoodie butcher.
-        
+            button.save_button.btn-success(ng-click="saveTrip()") Save
         div.container.col-md-8
             div#googleMap
