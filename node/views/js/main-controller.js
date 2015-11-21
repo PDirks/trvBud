@@ -18,7 +18,7 @@ trvBudApp.controller("trvBudCtrl", [ '$filter', '$scope', function ($filter, $sc
                 dataType: 'json',
                 success: function(data){
                     console.log("[get!] "+data.key);
-                    $(".perm_link").text("key: "+data.key);
+                    $(".perm_link").text("perm link: pete-dev.cloudapp.net/review?key="+data.key);
                 }
         });
         
