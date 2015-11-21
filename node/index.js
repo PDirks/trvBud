@@ -30,8 +30,6 @@ db.once('open', function (callback) {
     console.log("connected to mongo");
 });
 
-
-
 /*
  *  routing
  **/
@@ -121,8 +119,9 @@ app.get('/gCity', function(req, res, next){
 app.post('/saveTrip', function(req, res){
     console.log("[post]")
     console.log(req.body.q);
-    var input = JSON.parse(req.body.q);
-    console.log( input[0].name );
+    //var input = JSON.parse(req.body.q);
+    var input = req.body.q;
+    //console.log( "[post] itin: "+input);
     
     var temp = md5( input + new Date().getTime() );
     var key = temp.substr(temp.length - 5);
@@ -136,34 +135,44 @@ app.post('/saveTrip', function(req, res){
         console.log("[/saveTrip] collision! new key: "+key);
     }
     */
-    
-    db.collection("trip").insertOne({
+    var dat_insert = {
         "itin": input,
         "key": key
+    };
+    
+    db.collection("trip").insert( dat_insert, null, function(err, data){
+        if( err != null ){
+            console.log("[/saveTrip] insert error: "+err);
+        }
     });
     
-    if(db.collection("trip").find({ "key": key }).count() == 1){
-        console.log("good save")
-    }
-    else{
-        console.log("save err");
-    }
+    db.collection("trip").find({ "key": key }).toArray(function(err, docs){
+        if( err != null ){
+            console.log("[/saveTrip] find error: "+err);
+        }
+        else{
+            console.log("[/saveTrip] packed up: "+docs[0].itin+", "+docs[0].key);
+            res.json({key:docs[0].key});
+        }
+    });
     
-    res.redirect("/review?trip="+key);
+    //res.redirect(200,"/review?data="+dat_insert);
+    //res.redirect("http://google.com");
     
 });// end /saveTrip
 
 app.get('/review', function(req,res){
-    var key = req.query.trip;
-    console.log("[review] "+key);
+    var key = req.query.key;
+    console.log("[review] "+key+" / "+req.query.key);
     var iten_dat;
     db.collection("trip").find({"key": key}).limit(1).toArray(function(err, docs){
-        if(err || docs[0] == null) {
+        console.log("[review] loading up "+docs[0].itin);
+        if(err) {
             console.log("err: "+err);
             res.status(404).send("get city error!");
         }
         else{
-            res.render('review.jade', {iten: docs});        
+            res.render('review.jade', {places:JSON.parse(docs[0].itin)});    
         }
     });
     

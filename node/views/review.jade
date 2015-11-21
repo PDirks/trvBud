@@ -18,8 +18,14 @@ html(lang='en', ng-app="trvBudApp")
         nav.navbar.navbar-inverse
             div.container-fluid
                 a.navbar-brand(href='#') trvBud
+        
+        //h1!= iten
+            
         div.container.col-md-4
-            li.table.table-striped(ng-repeat="p in places")
+            for place in places
+                li 
+                    span= place.name
+                    span= place.date
                     
         div.container.col-md-8
             div#googleMap

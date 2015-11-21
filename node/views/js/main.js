@@ -1,6 +1,7 @@
 var map;
 var markers = [];
 var lines = [];
+var temp_places = [];
 var ids = [];
 var styles = [
     {

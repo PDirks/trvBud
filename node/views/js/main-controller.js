@@ -6,16 +6,22 @@ trvBudApp.controller("trvBudCtrl", [ '$filter', '$scope', function ($filter, $sc
     $scope.newAdd = '';
     
     $scope.saveTrip = function(){
-        console.log("sending out: "+JSON.stringify($scope.places));
+        console.log("[saveTrip] sending out: "+angular.toJson($scope.places));
+        console.log("[saveTrip] (sending out): "+angular.toJson($scope.places));
+        //var outData = JSON.stringify($scope.places);
+        //var outData = $scope.places;
+
         $.ajax({
                 url: '/saveTrip',
-                data: {"q":JSON.stringify($scope.places)},
+                data: {"q": angular.toJson($scope.places)},
                 type: 'post',
                 dataType: 'json',
-                success: function(data){}
+                success: function(data){
+                    console.log("[get!] "+data.key);
+                    $(".perm_link").text("key: "+data.key);
+                }
         });
         
-
     }// end saveTrip
     
     $scope.moveUp = function(target){
@@ -26,9 +32,14 @@ trvBudApp.controller("trvBudCtrl", [ '$filter', '$scope', function ($filter, $sc
             markers[$scope.places.indexOf(target)-1] = temp_marker;
             
             // change labels
-            var temp_place = $scope.places[$scope.places.indexOf(target)].name;
+            var t_p = temp_places[$scope.places.indexOf(target)].name;
+            temp_places[$scope.places.indexOf(target)].name = temp_places[$scope.places.indexOf(target)-1].name;
+            temp_places[$scope.places.indexOf(target)-1].name = t_p;
+            
+            t_p = $scope.places[$scope.places.indexOf(target)].name;
             $scope.places[$scope.places.indexOf(target)].name = $scope.places[$scope.places.indexOf(target)-1].name;
-            $scope.places[$scope.places.indexOf(target)-1].name = temp_place;
+            $scope.places[$scope.places.indexOf(target)-1].name = t_p;
+            
             
             // change paths... just wipe them all and redraw?(!)
             clearLines(lines);
@@ -45,9 +56,13 @@ trvBudApp.controller("trvBudCtrl", [ '$filter', '$scope', function ($filter, $sc
             markers[$scope.places.indexOf(target)+1] = temp_marker;
             
             // change labels
-            var temp_place = $scope.places[$scope.places.indexOf(target)].name;
+            var t_p = temp_places[$scope.places.indexOf(target)].name;
+            temp_places[$scope.places.indexOf(target)].name = temp_places[$scope.places.indexOf(target)-1].name;
+            temp_places[$scope.places.indexOf(target)-1].name = t_p;
+            
+            t_p = $scope.places[$scope.places.indexOf(target)].name;
             $scope.places[$scope.places.indexOf(target)].name = $scope.places[$scope.places.indexOf(target)+1].name;
-            $scope.places[$scope.places.indexOf(target)+1].name = temp_place;
+            $scope.places[$scope.places.indexOf(target)+1].name = t_p;
             
             // change paths... just wipe them all and redraw?(!)
             clearLines(lines);
@@ -56,11 +71,25 @@ trvBudApp.controller("trvBudCtrl", [ '$filter', '$scope', function ($filter, $sc
         }// end 0 check
     }// end moveDown
     
+    $scope.rmAll = function(target){
+        for( var i = 0; i < markers.length; i++ ){
+            markers[i].setMap(null);
+        }
+        for( var i = 0; i < lines.length; i++ ){
+            lines[i].setMap(null);
+        }
+        lines = [];
+        markers = [];
+        ids = [];
+        $scope.places = [];
+    }// end rmAll
+    
     $scope.rmPlace = function(target){
         console.log("rm "+ $scope.places.indexOf(target));
         
         if(lines.length > 0 && $scope.places.indexOf(target) != lines.length && $scope.places.indexOf(target) != 0 ){
             // remove connections from map
+            console.log("[rm] removing "+$scope.places.length);
             lines[$scope.places.indexOf(target)].setMap(null);
             lines[$scope.places.indexOf(target)-1].setMap(null);
             
@@ -88,22 +117,23 @@ trvBudApp.controller("trvBudCtrl", [ '$filter', '$scope', function ($filter, $sc
         }// end line check
         //now for the edge cases...
         else if(lines.length > 0 && $scope.places.indexOf(target) == lines.length){
-            lines[$scope.places.indexOf(target)].setMap(null);
+            lines[$scope.places.indexOf(target)-1].setMap(null);
             lines.splice($scope.places.indexOf(target), 1);
         }
         else if(lines.length > 0 && $scope.places.indexOf(target) == 0 ){
-            lines[$scope.places.indexOf(target)-1].setMap(null);
+            lines[$scope.places.indexOf(target)].setMap(null);
             lines.splice($scope.places.indexOf(target)-1, 1);
         }
         
         markers[$scope.places.indexOf(target)].setMap(null);
+        markers.splice($scope.places.indexOf(target),1);
         ids.splice( $scope.places.indexOf(target), 1 );
         $scope.places.splice( $scope.places.indexOf(target), 1 );
         //$scope.$digest();
     }// end rmPlace
     
     $scope.addPlace = function(){
-        console.log("date: "+$("#date").datepicker('getDate').toLocaleDateString());
+        //console.log("date: "+$("#date").datepicker('getDate').toLocaleDateString());
         console.log("/gCity..."+$scope.newAdd.trim());
         $.ajax({
             url: '/gCity',
@@ -153,13 +183,21 @@ trvBudApp.controller("trvBudCtrl", [ '$filter', '$scope', function ($filter, $sc
                     //console.dir("added line");
                     
                 }
+                var date;
+                if( $("#date").datepicker('getDate') == null ){
+                    date = "";
+                }
+                else{
+                    date = $("#date").datepicker('getDate').toLocaleDateString();
+                }
+                
                 if( data.Country == "US" ){
                     $scope.places.push(
                         {
                             'name': data.AccentCity+", "+data.Region,
                             'lat': data.Latitude,
                             'lng': data.Longitude,
-                            'arrive': $("#date").datepicker('getDate').toLocaleDateString()
+                            'arrive': date
                         });
                 }
                 else{
@@ -168,11 +206,19 @@ trvBudApp.controller("trvBudCtrl", [ '$filter', '$scope', function ($filter, $sc
                             'name': data.AccentCity+", "+data.Country, 
                             'lat': data.Latitude,
                             'lng': data.Longitude,
-                            'arrive': $("#date").datepicker('getDate').toLocaleDateString()
+                            'arrive': date
                         });
                 }
+                temp_places.push(
+                    {
+                        'name': data.AccentCity+", "+data.Region,
+                        'lat': data.Latitude,
+                            'lng': data.Longitude,
+                        'arrive': date
+                    }
+                );
+                
                 $scope.$digest();
-                $scope.newDate = '';
                 map.panTo(new google.maps.LatLng(data.Latitude,data.Longitude));
                 
                 console.log("done!");
@@ -180,7 +226,7 @@ trvBudApp.controller("trvBudCtrl", [ '$filter', '$scope', function ($filter, $sc
             }// end ajax
         });
         $scope.newAdd = '';
-        
+        $scope.newDate = '';
     }// end addPlace
     
 }]);// end trvBudApp.controller
